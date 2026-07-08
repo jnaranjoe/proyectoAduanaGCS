@@ -28,6 +28,8 @@ jobs:
           pip install -r backend/requirements.txt
 
       - name: Run pytest
+        env:
+          PDFS_DIR: ./pdfs
         run: |
           cd backend
           pytest
