@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ${USERPROFILE}/Documents/pdfEstudiantes:/app/pdfs
+      - sqlite_data:/app/data
+    environment:
+      - DATABASE_URL=sqlite:////app/data/students.sqlite
+      - OLLAMA_API_KEY=7d4a149c43374e44a7a6fd231d873cf6.n4KL8tVCnkXBgQcIwrvSA_t2
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - VITE_API_URL=http://localhost:8000
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:
